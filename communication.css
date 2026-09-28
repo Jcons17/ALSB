@@ -37,8 +37,9 @@ main { display: flex; flex: 1; flex-direction: column; min-height: 0; }
 .message-top-actions { display: flex; align-items: center; gap: 9px; }
 .reset-button { min-height: 48px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 2px solid #c8d5c9; border-radius: 11px; background: #fff; color: #35493b; font-size: 13px; font-weight: 700; cursor: pointer; }.reset-button svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }.reset-button:disabled { opacity: .48; }
 .word-track { display: flex; align-items: center; width: 100%; min-height: 63px; margin-top: 10px; padding: 2px 3px; overflow: auto hidden; color: #102d1e; font-size: clamp(28px, 4.6vh, 44px); line-height: 1.15; font-weight: 750; letter-spacing: .2px; overflow-wrap: anywhere; }.word-track.is-empty { color: #526458; font-size: clamp(19px, 3vh, 26px); font-weight: 550; }
-.suggestion-row { display: flex; align-items: center; gap: 8px; min-height: 42px; margin-top: 4px; overflow-x: auto; }.suggestion-button { min-height: 40px; padding: 6px 14px; border: 2px solid #bdd8c3; border-radius: 10px; background: #edf7ee; color: #174f35; font-size: 16px; font-weight: 750; white-space: nowrap; cursor: pointer; }.suggestion-button:hover { background: #dcefe0; }
+.suggestion-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 4px; }.suggestion-button { min-width: 0; min-height: 38px; padding: 5px 9px; overflow: hidden; border: 2px solid #bdd8c3; border-radius: 10px; background: #edf7ee; color: #174f35; font-size: 15px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }.suggestion-button:hover { background: #dcefe0; }
 .message-controls { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; margin-top: 9px; }.message-control { min-width: 0; min-height: 48px; padding: 5px 8px; border: 2px solid #cbd8cd; border-radius: 10px; background: #f9fbf8; color: #21392a; font-size: 14px; font-weight: 750; cursor: pointer; }.message-control:first-child, .message-control:nth-child(2) { grid-column: span 2; }.message-control span { margin-right: 4px; font-size: 17px; }.message-control:hover:not(:disabled) { border-color: #75a988; background: #eaf4ea; }.punctuation-control { font-size: 22px; }.message-control:disabled { opacity: .45; }
+.clear-message-button { grid-column: span 2; justify-content: center; gap: 4px; min-height: 42px; padding: 4px 5px; font-size: 12px; }.clear-message-button svg { width: 15px; height: 15px; flex: 0 0 15px; }
 .alphabet-card { display: flex; flex: 1; flex-direction: column; min-height: 0; padding: 12px 15px; }.alphabet-header { flex: 0 0 auto; min-height: 44px; }.alphabet-header .section-heading { gap: 0; }.alphabet-header .card-kicker { font-size: 9px; }.alphabet-header h2 { font-size: clamp(16px, 2vw, 21px); }.set-indicator { display: inline-flex; align-items: center; gap: 8px; color: #273b2d; font-size: 15px; font-weight: 750; white-space: nowrap; }.set-dot { width: 10px; height: 10px; border-radius: 50%; background: #25764f; }
 .target-callout { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; min-height: 35px; margin: 6px 0 9px; padding: 4px 8px; border-radius: 7px; background: #edf4eb; color: #304c39; font-size: 13px; font-weight: 650; }.callout-icon { color: #28734d; font-size: 17px; }.find-letter-button { display: none !important; }
 .letter-grid { display: grid; flex: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(100px, 1fr)); gap: clamp(8px, 1.5vh, 15px); min-height: 0; }
@@ -62,3 +63,37 @@ main { display: flex; flex: 1; flex-direction: column; min-height: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* Keep the communication controls prominent and the six letter keys easy to see. */
+.topbar { flex-basis: 44px; min-height: 44px; justify-content: flex-end; border-bottom: 0; }
+.letter-button { font-size: clamp(64px, 13vh, 112px); }
+@media (max-width: 560px) {
+  .letter-button { font-size: clamp(68px, 13.5vh, 112px); }
+  .suggestion-button { padding-right: 4px; padding-left: 4px; font-size: 11px; }
+}
+@media (max-height: 650px) {
+  .letter-button { font-size: clamp(55px, 9vh, 90px); }
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 560px) {
+  .page-shell { height: 100svh; min-height: 0; padding: 3px 10px; }
+  .topbar { flex-basis: 34px; min-height: 34px; }
+  main, .board-layout, .main-column { min-height: 0; }
+  .main-column { flex-direction: row; gap: 9px; }
+  .spelling-card { display: flex; flex: 0 0 39%; flex-direction: column; min-width: 0; min-height: 0; padding: 7px; }
+  .word-track { min-height: 42px; margin-top: 0; font-size: clamp(22px, 8vh, 34px); }
+  .word-track.is-empty { font-size: 17px; }
+  .suggestion-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; min-height: 0; margin-top: 3px; overflow-y: auto; }
+  .suggestion-button { min-height: 25px; padding: 2px; font-size: 11px; }
+  .message-controls { margin-top: auto; gap: 4px; }
+  .message-control { min-height: 34px; padding: 3px 4px; font-size: 11px; }
+  .message-control span { margin-right: 2px; font-size: 14px; }
+  .clear-message-button { min-height: 34px; padding: 3px; font-size: 11px; }
+  .clear-message-button svg { width: 13px; height: 13px; flex-basis: 13px; }
+  .alphabet-card { min-width: 0; padding: 5px 8px; }
+  .alphabet-header { min-height: 25px; }
+  .letter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(60px, 1fr)); gap: 6px; }
+  .letter-button { min-height: 60px; border-radius: 12px; font-size: clamp(50px, 18vh, 80px); }
+  .board-footer { min-height: 33px; padding-top: 3px; }
+  .next-set-button, .previous-set-button { min-height: 30px; padding: 3px 12px; }
+}

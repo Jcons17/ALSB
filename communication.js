@@ -7,12 +7,14 @@ const alphabetGroups = [
 ];
 
 const priorityWords = [
+  'me duele', 'me gusta', 'me gusta mucho', 'me siento bien', 'me siento mal',
+  'me siento triste', 'me siento feliz', 'me da miedo', 'me molesta', 'me da frío', 'me da calor',
   'agua', 'ayuda', 'abrir', 'adiós', 'ahora', 'amigo', 'amor', 'baño', 'bien', 'casa',
   'comer', 'descanso', 'dolor', 'espera', 'estoy', 'familia', 'feliz', 'gracias', 'hambre',
   'hola', 'jugar', 'leche', 'libro', 'mamá', 'más', 'menos', 'música', 'necesito', 'no',
   'ñandú', 'papá', 'parar', 'por favor', 'quiero', 'sí', 'sed', 'tengo', 'terminé', 'vamos',
-  'amiga', 'calor', 'frío', 'medicina', 'miedo', 'escuela', 'me gusta', 'me duele',
-  'me siento mal', 'me siento bien', 'quiero agua', 'quiero comer', 'quiero descansar',
+  'amiga', 'calor', 'frío', 'medicina', 'miedo', 'escuela',
+  'quiero agua', 'quiero comer', 'quiero descansar',
   'quiero ir al baño', 'necesito ayuda', 'no quiero', 'tengo frío', 'tengo calor',
   'tengo sed', 'tengo hambre', 'ayúdame', 'otra vez', 'ya terminé', 'estoy cansado',
 ];
@@ -70,7 +72,7 @@ function renderGrid() {
     button.addEventListener('click', () => addText(letter.toLocaleLowerCase('es')));
     elements.grid.append(button);
   });
-  elements.setLabel.textContent = `Grupo ${state.groupIndex + 1} de ${alphabetGroups.length}`;
+  elements.setLabel.textContent = `${state.groupIndex + 1} / ${alphabetGroups.length}`;
   elements.previous.disabled = state.groupIndex === 0;
   elements.next.disabled = state.groupIndex === alphabetGroups.length - 1;
 }
@@ -93,7 +95,7 @@ function renderSuggestions() {
   const matches = wordBank.filter((word) => {
     const cleanWord = normalize(word);
     return cleanWord.startsWith(cleanPrefix) && cleanWord !== cleanPrefix;
-  }).slice(0, 3);
+  }).slice(0, 9);
 
   if (!matches.length) {
     elements.suggestions.hidden = true;
