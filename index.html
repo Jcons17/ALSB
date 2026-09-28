@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8f4" />
+    <meta name="description" content="Tablero de comunicación accesible con letras grandes y sugerencias de palabras." />
+    <title>Letter Loop — Tablero de comunicación</title>
+    <link rel="stylesheet" href="communication.css" />
+    <script src="words-es.js" defer></script>
+    <script src="communication.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#inicio" aria-label="Letter Loop, inicio">
+          <span class="brand-mark" aria-hidden="true"><span>A</span><span>a</span></span>
+          <span class="brand-copy"><strong>letter loop</strong><small>TABLERO DE COMUNICACIÓN</small></span>
+        </a>
+        <button class="quick-phrases-launch" id="open-phrases-button" type="button"><span class="live-dot" aria-hidden="true"></span><span aria-hidden="true">💬</span> Frases rápidas</button>
+      </header>
+
+      <main id="inicio">
+        <section class="intro" aria-labelledby="page-title">
+          <div class="intro-copy">
+            <p class="eyebrow"><span class="eyebrow-line"></span> TU ABECEDARIO, A TU RITMO</p>
+            <h1 id="page-title">Las palabras empiezan<br class="desktop-break" /> <span>letra por letra.</span></h1>
+            <p class="intro-description">Explora el tablero, encuentra la siguiente letra y mira cómo tu palabra toma forma.</p>
+          </div>
+          <div class="intro-art" aria-hidden="true">
+            <span class="orbit orbit-one"></span><span class="orbit orbit-two"></span>
+            <span class="art-letter art-letter-a">A</span><span class="art-letter art-letter-b">b</span><span class="art-letter art-letter-c">ñ</span>
+            <span class="sparkle sparkle-one">✳</span><span class="sparkle sparkle-two">✦</span>
+          </div>
+        </section>
+
+        <section class="board-layout" aria-label="Tablero interactivo">
+          <div class="main-column">
+            <section class="card word-card" aria-labelledby="word-heading">
+              <div class="section-heading">
+                <div class="heading-icon target-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></div>
+                <div><p class="card-kicker">PRIMERO, UNA IDEA</p><h2 id="word-heading">¿Qué palabra buscas?</h2></div>
+                <span class="optional-tag">opcional</span>
+              </div>
+              <label class="sr-only" for="word-input">Escribe una palabra para recibir ayuda con las letras</label>
+              <div class="input-wrap">
+                <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.2 4.2"/></svg>
+                <input id="word-input" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Escribe una palabra o empieza a explorar…" aria-describedby="input-hint" aria-controls="suggestions-list" />
+                <button class="clear-input" id="clear-input" type="button" aria-label="Borrar palabra" hidden>×</button>
+                <ul class="suggestions" id="suggestions-list" role="listbox" aria-label="Sugerencias de palabras" hidden></ul>
+              </div>
+              <p class="input-hint" id="input-hint"><span class="hint-sparkle" aria-hidden="true">✦</span> El autocorrector te dará ideas mientras escribes.</p>
+            </section>
+
+            <section class="card spelling-card" aria-labelledby="spelling-heading">
+              <div class="spelling-topline">
+                <div class="section-heading compact-heading">
+                  <div class="heading-icon pencil-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 16.8-.8 4 4-.8L19 8.2 15.8 5 4 16.8Z"/><path d="m13.8 7 3.2 3.2M4 21h16"/></svg></div>
+                  <div><p class="card-kicker">COMUNICACIÓN</p><h2 id="spelling-heading">Tu mensaje</h2></div>
+                </div>
+                <div class="message-top-actions">
+                  <button class="text-button reset-button" id="reset-button" type="button" title="Borrar todo el mensaje"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11a8.5 8.5 0 1 1 2.1 5.7M3.5 11V5.5M3.5 11H9"/></svg><span>Borrar todo</span></button>
+                </div>
+              </div>
+              <div class="word-track" id="word-track" aria-live="polite" aria-label="Tu mensaje"><span class="empty-track">Tu mensaje aparecerá aquí.</span></div>
+              <div class="suggestion-row" id="suggestion-row" aria-label="Sugerencias de palabras" hidden></div>
+              <div class="message-controls" aria-label="Controles para escribir">
+                <button class="message-control" id="space-button" type="button"><span aria-hidden="true">␣</span> Espacio</button>
+                <button class="message-control" id="undo-button" type="button" aria-label="Borrar última letra"><span aria-hidden="true">⌫</span> Borrar última</button>
+                <button class="message-control punctuation-control" data-character="," type="button" aria-label="Añadir coma">,</button>
+                <button class="message-control punctuation-control" data-character="." type="button" aria-label="Añadir punto">.</button>
+                <button class="message-control punctuation-control" data-character="?" type="button" aria-label="Añadir signo de pregunta">?</button>
+                <button class="message-control punctuation-control" data-character="!" type="button" aria-label="Añadir signo de exclamación">!</button>
+              </div>
+            </section>
+
+            <section class="card alphabet-card" aria-labelledby="alphabet-heading">
+              <div class="alphabet-header">
+                <div class="section-heading compact-heading">
+                  <div class="heading-icon grid-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="6" height="6" rx="1.5"/><rect x="14.5" y="3.5" width="6" height="6" rx="1.5"/><rect x="3.5" y="14.5" width="6" height="6" rx="1.5"/><rect x="14.5" y="14.5" width="6" height="6" rx="1.5"/></svg></div>
+                  <div><p class="card-kicker">TABLERO DE LETRAS</p><h2 id="alphabet-heading">Abecedario</h2></div>
+                </div>
+                <div class="set-indicator"><span class="set-dot"></span><span id="set-label">Grupo 1 de 5</span></div>
+              </div>
+              <div class="target-callout" id="target-callout" aria-live="polite">
+                <span class="callout-icon" aria-hidden="true">✳</span>
+                <span id="callout-text">La persona señala una letra. Tócala aquí para escribirla.</span>
+                <button class="find-letter-button" id="find-letter-button" type="button" hidden>Encontrar letra <span aria-hidden="true">↗</span></button>
+              </div>
+              <div class="letter-grid" id="letter-grid" role="group" aria-label="Letras del grupo actual"></div>
+              <div class="board-footer">
+                <button class="previous-set-button" id="previous-set-button" type="button" aria-label="Grupo anterior">← Anterior</button>
+                <p><kbd>←</kbd><kbd>→</kbd> <span>cambiar grupo</span></p>
+                <button class="next-set-button" id="next-set-button" type="button"><span>Siguiente grupo</span><span class="arrow" aria-hidden="true">→</span></button>
+              </div>
+            </section>
+          </div>
+
+          <aside class="side-column">
+            <section class="tip-card" aria-labelledby="tip-heading">
+              <div class="tip-stamp" aria-hidden="true">✦</div>
+              <p class="card-kicker">UN PEQUEÑO TRUCO</p>
+              <h2 id="tip-heading">¿No ves la letra?</h2>
+              <p>Cada grupo tiene una parte del abecedario. Avanza hasta encontrar la que necesitas.</p>
+              <div class="tip-example"><span class="example-letter">M</span><span class="example-arrow" aria-hidden="true">→</span><span>está en el grupo 2</span></div>
+            </section>
+            <section class="side-note" aria-label="Consejo del tablero">
+              <span class="note-icon" aria-hidden="true">⌘</span>
+              <p><strong>Un paso a la vez.</strong><br />Puedes deshacer cualquier letra si cambias de idea.</p>
+            </section>
+          </aside>
+        </section>
+        <footer class="page-footer"><span>LETTER LOOP</span><span>Hecho para jugar con las palabras <span aria-hidden="true">♡</span></span></footer>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        <dialog class="quick-phrases-dialog" id="quick-phrases-dialog" aria-labelledby="phrases-heading">
+          <div class="dialog-heading">
+            <div><p class="card-kicker">MENSAJES FRECUENTES</p><h2 id="phrases-heading">Frases rápidas</h2></div>
+            <button class="dialog-close" id="close-phrases-button" type="button" aria-label="Cerrar frases rápidas">×</button>
+          </div>
+          <p class="dialog-help">Elige una frase para colocarla en tu mensaje.</p>
+          <div class="quick-phrase-grid">
+            <button type="button" data-phrase="Sí">Sí</button>
+            <button type="button" data-phrase="No">No</button>
+            <button type="button" data-phrase="Ayuda, por favor">Ayuda</button>
+            <button type="button" data-phrase="Quiero agua">Quiero agua</button>
+            <button type="button" data-phrase="Quiero ir al baño">Ir al baño</button>
+            <button type="button" data-phrase="Tengo dolor">Tengo dolor</button>
+            <button type="button" data-phrase="Tengo hambre">Tengo hambre</button>
+            <button type="button" data-phrase="Estoy bien">Estoy bien</button>
+            <button type="button" data-phrase="Gracias">Gracias</button>
+          </div>
+        </dialog>
+      </main>
+    </div>
+  </body>
+</html>
