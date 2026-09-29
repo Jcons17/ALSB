@@ -13,6 +13,10 @@
   <body>
     <div class="page-shell">
       <header class="topbar">
+        <button class="computer-mode-toggle" id="computer-mode-toggle" type="button" role="switch" aria-checked="false">
+          <span class="computer-mode-icon" aria-hidden="true">▣</span>
+          <span id="computer-mode-label">Modo computadora</span>
+        </button>
         <button class="quick-phrases-launch" id="open-phrases-button" type="button" aria-label="Mostrar frases rápidas"><span aria-hidden="true">💬</span> Frases</button>
       </header>
 
@@ -35,9 +39,10 @@
 
             <section class="card alphabet-card" aria-label="Letras">
               <div class="alphabet-header">
-                <div class="set-indicator"><span id="set-label">1 / 5</span></div>
+                <div class="set-indicator"><span id="set-label">Consonantes 1 / 4</span></div>
               </div>
-              <div class="letter-grid" id="letter-grid" role="group" aria-label="Letras del grupo actual"></div>
+              <div class="vowel-row" id="vowel-row" role="group" aria-label="Vocales"></div>
+              <div class="letter-grid" id="letter-grid" role="group" aria-label="Consonantes del grupo actual"></div>
               <div class="board-footer">
                 <button class="previous-set-button" id="previous-set-button" type="button" aria-label="Grupo anterior">←</button>
                 <button class="next-set-button" id="next-set-button" type="button" aria-label="Siguiente grupo">→</button>

@@ -27,6 +27,7 @@ button:disabled { cursor: not-allowed; }
 .brand-copy { display: grid; gap: 1px; }.brand-copy strong { font-size: 17px; font-weight: 800; letter-spacing: -.5px; }.brand-copy small { color: #45574b; font-size: 9px; font-weight: 800; letter-spacing: 1px; }
 .topbar-note { color: #42564a; font-size: 14px; font-weight: 600; }.live-dot { display: inline-block; width: 10px; height: 10px; margin-right: 8px; border-radius: 50%; background: #277d53; box-shadow: 0 0 0 4px #dcebdc; }
 .quick-phrases-launch { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 6px 12px; border: 2px solid #adc8b2; border-radius: 11px; background: #e8f2e7; color: #18482d; font-size: 14px; font-weight: 800; cursor: pointer; }.quick-phrases-launch:hover { background: #dcebdc; }
+.computer-mode-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 6px 12px; border: 2px solid #adc8b2; border-radius: 11px; background: #fff; color: #18482d; font-size: 14px; font-weight: 750; cursor: pointer; }.computer-mode-toggle[aria-checked="true"] { border-color: var(--green); background: var(--green); color: white; }.computer-mode-icon { font-size: 18px; line-height: 1; }
 main { display: flex; flex: 1; flex-direction: column; min-height: 0; }
 .intro, .word-card, .side-column, .page-footer { display: none !important; }
 .board-layout, .main-column { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; gap: 12px; }
@@ -96,4 +97,53 @@ main { display: flex; flex: 1; flex-direction: column; min-height: 0; }
   .letter-button { min-height: 60px; border-radius: 12px; font-size: clamp(50px, 18vh, 80px); }
   .board-footer { min-height: 33px; padding-top: 3px; }
   .next-set-button, .previous-set-button { min-height: 30px; padding: 3px 12px; }
+}
+
+.vowel-row { display: grid; flex: 0 0 auto; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(5px, 1vw, 10px); margin-bottom: clamp(6px, 1vh, 10px); }
+.vowel-button { display: grid; place-items: center; min-width: 0; min-height: clamp(46px, 7vh, 66px); padding: 2px; border: 3px solid #82ae8a; border-radius: 14px; background: #e5f1e5; color: #17492c; font-size: clamp(30px, 6vh, 48px); font-weight: 850; line-height: 1; cursor: pointer; touch-action: manipulation; }
+.vowel-button:hover { border-color: #367d51; background: #d5ead5; }
+.letter-grid-four { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(60px, 1fr)); width: min(100%, 720px); align-self: center; }
+@media (max-width: 560px) {
+  .letter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(72px, 1fr)); }
+  .letter-grid-four { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(72px, 1fr)); }
+  .vowel-button { min-height: 48px; border-width: 2px; border-radius: 11px; font-size: clamp(29px, 5.5vh, 42px); }
+}
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 560px) {
+  .vowel-row { gap: 5px; margin-bottom: 4px; }
+  .vowel-button { min-height: 34px; border-width: 2px; border-radius: 8px; font-size: clamp(22px, 7vh, 32px); }
+  .letter-grid-four { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(40px, 1fr)); }
+}
+
+body.computer-mode { min-height: 100svh; overflow: hidden; }
+body.computer-mode .page-shell { width: 100%; max-width: none; height: 100svh; min-height: 0; padding: 8px 16px; }
+body.computer-mode .topbar { flex: 0 0 48px; min-height: 48px; gap: 10px; justify-content: flex-end; }
+body.computer-mode main, body.computer-mode .board-layout, body.computer-mode .main-column { min-height: 0; }
+body.computer-mode .board-layout, body.computer-mode .main-column { gap: 10px; }
+body.computer-mode .spelling-card { padding: 8px 12px; }
+body.computer-mode .word-track { min-height: 50px; margin-top: 0; font-size: clamp(28px, 5vh, 54px); }
+body.computer-mode .word-track.is-empty { font-size: clamp(20px, 3vh, 28px); }
+body.computer-mode .suggestion-row { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px; max-height: 90px; overflow-y: auto; }
+body.computer-mode .suggestion-button { min-height: 38px; font-size: clamp(12px, 1.3vw, 17px); }
+body.computer-mode .message-controls { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px; margin-top: 7px; }
+body.computer-mode .message-control, body.computer-mode .message-control:first-child, body.computer-mode .message-control:nth-child(2), body.computer-mode .clear-message-button { grid-column: span 1; min-height: 44px; font-size: 14px; }
+body.computer-mode .alphabet-card { padding: 8px 12px; }
+body.computer-mode .alphabet-header { min-height: 28px; }
+body.computer-mode .set-indicator { font-size: 15px; }
+body.computer-mode .vowel-row { grid-template-columns: repeat(5, minmax(90px, 160px)); justify-content: center; gap: 10px; margin-bottom: 8px; }
+body.computer-mode .vowel-button { min-height: clamp(54px, 8vh, 78px); font-size: clamp(36px, 6.5vh, 58px); }
+body.computer-mode .letter-grid-computer { grid-template-columns: repeat(11, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(70px, 1fr)); gap: clamp(7px, 1vw, 16px); }
+body.computer-mode .letter-grid-computer .letter-button { min-height: 70px; border-radius: 17px; font-size: clamp(40px, 8vh, 82px); }
+body.computer-mode .board-footer { display: none; }
+body.computer-mode:fullscreen { background: #f2f5ef; }
+
+@media (max-width: 760px) {
+  body.computer-mode .page-shell { padding: 5px 8px; }
+  body.computer-mode .topbar { flex-basis: 42px; min-height: 42px; }
+  body.computer-mode .letter-grid-computer { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(54px, 1fr)); gap: 6px; }
+  body.computer-mode .letter-grid-computer .letter-button { min-height: 54px; font-size: clamp(34px, 7vh, 58px); }
+  body.computer-mode .vowel-row { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  body.computer-mode .vowel-button { min-height: 48px; font-size: 34px; }
+  body.computer-mode .suggestion-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  body.computer-mode .message-controls { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  body.computer-mode .message-control, body.computer-mode .message-control:first-child, body.computer-mode .message-control:nth-child(2), body.computer-mode .clear-message-button { grid-column: span 2; }
 }

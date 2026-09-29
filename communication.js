@@ -1,9 +1,9 @@
-const alphabetGroups = [
-  ['A', 'B', 'C', 'D', 'E', 'F'],
-  ['G', 'H', 'I', 'J', 'K', 'L'],
-  ['M', 'N', 'Ñ', 'O', 'P', 'Q'],
-  ['R', 'S', 'T', 'U', 'V', 'W'],
-  ['X', 'Y', 'Z', 'A', 'E', 'O'],
+const vowels = ['E', 'A', 'O', 'I', 'U'];
+const consonantGroups = [
+  ['S', 'N', 'R', 'D', 'L', 'C'],
+  ['T', 'M', 'P', 'B', 'G', 'V'],
+  ['Y', 'Q', 'H', 'F', 'Z', 'J'],
+  ['Ñ', 'X', 'W', 'K'],
 ];
 
 const priorityWords = [
@@ -23,6 +23,7 @@ const wordBank = [...new Set([...priorityWords, ...(window.spanishDictionary || 
 
 const elements = {
   grid: document.querySelector('#letter-grid'),
+  vowelRow: document.querySelector('#vowel-row'),
   setLabel: document.querySelector('#set-label'),
   message: document.querySelector('#word-track'),
   suggestions: document.querySelector('#suggestion-row'),
@@ -35,11 +36,14 @@ const elements = {
   openPhrases: document.querySelector('#open-phrases-button'),
   closePhrases: document.querySelector('#close-phrases-button'),
   toast: document.querySelector('#toast'),
+  computerMode: document.querySelector('#computer-mode-toggle'),
+  computerModeLabel: document.querySelector('#computer-mode-label'),
 };
 
 const state = {
   groupIndex: 0,
   message: '',
+  computerMode: false,
   toastTimer: null,
 };
 
@@ -61,20 +65,35 @@ function saveMessage() {
 }
 
 function renderGrid() {
-  elements.grid.replaceChildren();
-  alphabetGroups[state.groupIndex].forEach((letter) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'letter-button';
-    button.textContent = letter;
-    const repeatedVowel = state.groupIndex === alphabetGroups.length - 1 && ['A', 'E', 'O'].includes(letter);
-    button.setAttribute('aria-label', `Añadir letra ${letter}${repeatedVowel ? ', vocal frecuente' : ''}`);
-    button.addEventListener('click', () => addText(letter.toLocaleLowerCase('es')));
-    elements.grid.append(button);
+  elements.vowelRow.replaceChildren();
+  vowels.forEach((letter) => {
+    const button = createLetterButton(letter, 'vowel-button');
+    button.setAttribute('aria-label', `Añadir vocal ${letter}`);
+    elements.vowelRow.append(button);
   });
-  elements.setLabel.textContent = `${state.groupIndex + 1} / ${alphabetGroups.length}`;
-  elements.previous.disabled = state.groupIndex === 0;
-  elements.next.disabled = state.groupIndex === alphabetGroups.length - 1;
+
+  elements.grid.replaceChildren();
+  const group = state.computerMode ? consonantGroups.flat() : consonantGroups[state.groupIndex];
+  elements.grid.classList.toggle('letter-grid-four', !state.computerMode && group.length === 4);
+  elements.grid.classList.toggle('letter-grid-computer', state.computerMode);
+  group.forEach((letter) => {
+    elements.grid.append(createLetterButton(letter, 'letter-button'));
+  });
+  elements.setLabel.textContent = state.computerMode
+    ? 'Abecedario completo'
+    : `Consonantes ${state.groupIndex + 1} / ${consonantGroups.length}`;
+  elements.previous.disabled = state.computerMode || state.groupIndex === 0;
+  elements.next.disabled = state.computerMode || state.groupIndex === consonantGroups.length - 1;
+}
+
+function createLetterButton(letter, className) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = className;
+  button.textContent = letter;
+  button.setAttribute('aria-label', `Añadir letra ${letter}`);
+  button.addEventListener('click', () => addText(letter.toLocaleLowerCase('es')));
+  return button;
 }
 
 function currentWordStart() {
@@ -154,9 +173,43 @@ function deleteLast() {
 }
 
 function changeGroup(direction) {
+  if (state.computerMode) return;
   const nextIndex = state.groupIndex + direction;
-  if (nextIndex < 0 || nextIndex >= alphabetGroups.length) return;
+  if (nextIndex < 0 || nextIndex >= consonantGroups.length) return;
   state.groupIndex = nextIndex;
+  renderGrid();
+}
+
+async function toggleComputerMode() {
+  state.computerMode = !state.computerMode;
+  document.body.classList.toggle('computer-mode', state.computerMode);
+  elements.computerMode.setAttribute('aria-checked', String(state.computerMode));
+  elements.computerModeLabel.textContent = state.computerMode
+    ? 'Salir de pantalla completa'
+    : 'Modo computadora';
+  renderGrid();
+
+  if (state.computerMode && document.documentElement.requestFullscreen) {
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch {
+      showToast('Modo computadora activado. Puedes ampliar la ventana del navegador.');
+    }
+  } else if (!state.computerMode && document.fullscreenElement) {
+    try {
+      await document.exitFullscreen();
+    } catch {
+      // The browser can keep the current layout if fullscreen exit is unavailable.
+    }
+  }
+}
+
+function handleFullscreenChange() {
+  if (document.fullscreenElement || !state.computerMode) return;
+  state.computerMode = false;
+  document.body.classList.remove('computer-mode');
+  elements.computerMode.setAttribute('aria-checked', 'false');
+  elements.computerModeLabel.textContent = 'Modo computadora';
   renderGrid();
 }
 
@@ -169,6 +222,8 @@ function showToast(message) {
 
 elements.next.addEventListener('click', () => changeGroup(1));
 elements.previous.addEventListener('click', () => changeGroup(-1));
+elements.computerMode.addEventListener('click', toggleComputerMode);
+document.addEventListener('fullscreenchange', handleFullscreenChange);
 elements.space.addEventListener('click', addSpace);
 elements.undo.addEventListener('click', deleteLast);
 elements.clear.addEventListener('click', () => {
@@ -190,8 +245,24 @@ document.querySelectorAll('.punctuation-control').forEach((button) => {
 });
 document.addEventListener('keydown', (event) => {
   if (event.altKey || event.ctrlKey || event.metaKey) return;
+  if (elements.phrasesDialog.open) return;
+  if (event.key === 'Backspace') {
+    event.preventDefault();
+    deleteLast();
+    return;
+  }
+  if (event.key === ' ') {
+    event.preventDefault();
+    addSpace();
+    return;
+  }
   if (event.key === 'ArrowRight') changeGroup(1);
   if (event.key === 'ArrowLeft') changeGroup(-1);
+  if (/^[a-záéíóúüñ]$/i.test(event.key)) {
+    addText(event.key.toLocaleLowerCase('es'));
+    return;
+  }
+  if ([',', '.', '?', '!'].includes(event.key)) addPunctuation(event.key);
 });
 
 try {
